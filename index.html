@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="description" content="Count time to event or passed from event!"/>
+
+    <title>CounterGear</title>
+
+    <link rel="stylesheet" href="lib/tau/wearable/theme/default/tau.min.css"/>
+    <link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
+          href="lib/tau/wearable/theme/default/tau.circle.min.css">
+
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" media="all and (-tizen-geometric-shape: circle)"
+          href="css/style.circle.css">
+
+    <script type="text/javascript" src="js/circle-helper.js"></script>
+
+
+    <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="js/interval.js"></script>
+    <script type="text/javascript" src="js/log-1.0.1.1.js"></script>
+    <script type="text/javascript" src="js/utils-2.1.8.js"></script>
+    <script type="text/javascript" src="js/input/typeGear-1.0.0.js"></script>
+    <script type="text/javascript" src="js/input/input-1.1.1.js"></script>
+    <script type="text/javascript" src="lib/tau/wearable/js/tau.min.js"></script>
+    <script type="text/javascript" src="js/edittimer/editviewstate.js"></script>
+    <script type="text/javascript" src="js/edittimer/edittimervm.js"></script>
+    <script type="text/javascript" src="js/preferences/prefrepository.js"></script>
+    <script type="text/javascript" src="js/preferences/prefsource.js"></script>
+    <script type="text/javascript" src="js/feedback.js"></script>
+    <script type="text/javascript" src="js/toastMessage-1.1.1.js"></script>
+    <script type="text/javascript" src="js/contextMenu-1.0.2.0.js"></script>
+    <script type="text/javascript" src="js/actionMenu-2.2.0.js"></script>
+    <script type="text/javascript" src="js/timersList.js"></script>
+    <script type="text/javascript" src="js/countView.js"></script>
+    <script type="text/javascript" src="js/edittimer/addPage.js"></script>
+    <script type="text/javascript" src="js/domain/model/historyState.js"></script>
+    <script type="text/javascript" src="js/domain/model/timerState.js"></script>
+    <script type="text/javascript" src="js/domain/model/repeatType.js"></script>
+    <script type="text/javascript" src="js/domain/model/postponeType.js"></script>
+    <script type="text/javascript" src="js/domain/model/timer.js"></script>
+    <script type="text/javascript" src="js/edittimer/repeatpage.js"></script>
+    <script type="text/javascript" src="js/edittimer/number-picker.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/list-1.0.0.js"></script>
+
+    <script src="locales/en-us/language.js"></script>
+    <!--suppress HtmlUnknownTarget -->
+    <script src="language.js"></script>
+</head>
+<body>
+
+<div class="ui-page ui-page-active" id="startPage">
+</div>
+
+<div class="ui-page" id="mainPage">
+    <button type="button" onclick="openMenuClick()" class="ui-more"></button>
+    <div class="ui-content">
+        <ul id="mainList" class="ui-listview">
+
+        </ul>
+    </div>
+</div>
+
+<div class="ui-page" id="ringtone_page">
+    <div class="ui-content">
+        <ul class="ui-listview">
+
+        </ul>
+    </div>
+</div>
+
+<div class="ui-page" id="addPage">
+    <header class="ui-header">
+        <h2 class="ui-title"></h2>
+    </header>
+    <div class="ui-content">
+
+        <ul class="ui-listview">
+            <li class="li-has-multiline">
+                <label>
+                    <span id="nameSpan" class="ui-li-sub-text li-text-sub">Timer</span>
+                </label>
+            </li>
+            <li class="li-has-multiline">
+                <label>
+                    <span id="timeSpan" class="ui-li-sub-text li-text-sub"></span>
+                </label>
+            </li>
+            <li class="li-has-multiline">
+                <label>
+                    <span id="dateSpan" class="ui-li-sub-text li-text-sub">None</span>
+                </label>
+            </li>
+            <li class="li-has-checkbox">
+                <label id="remindLabel">
+                    <input id="remind" name="remind" type="checkbox"/>
+                </label>
+            </li>
+
+            <li class="li-has-multiline">
+                <label id="repeatLabel">
+                    <span id="repeatSpan" class="ui-li-sub-text li-text-sub"></span>
+                </label>
+            </li>
+        </ul>
+    </div>
+
+    <footer class="ui-footer ui-bottom-button ui-fixed">
+        <button id="addOkBtn" class="ui-btn">OK</button>
+    </footer>
+</div>
+
+<div id="repeatPage" class="ui-page">
+    <!-- <header class="ui-header">
+         <h2 class="ui-title"></h2>
+     </header>-->
+    <div class="ui-content">
+
+        <ul class="ui-listview">
+
+            <li class="li-has-multiline">
+                <a id="repeatType">
+                    <span id="repeatTypeSpan" class="ui-li-sub-text li-text-sub"></span>
+                </a>
+            </li>
+
+            <li class="li-has-multiline">
+                <label id="repeatCount">
+                    <span id="repeatCountSpan" class="ui-li-sub-text li-text-sub">1</span>
+                </label>
+            </li>
+
+        </ul>
+    </div>
+    <footer class="ui-footer ui-bottom-button ui-fixed">
+        <button id="repeatOkButton" class="ui-btn">OK</button>
+    </footer>
+</div>
+
+<div id="repeatTypePickPage" class="ui-page">
+    <header class="ui-header">
+        <h2 class="ui-title"></h2>
+    </header>
+    <div class="ui-content">
+        <ul class="ui-listview">
+
+            <li class="li-has-checkbox">
+                <label id="repeatTypeNone">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>
+
+            <li class="li-has-checkbox">
+                <label id="repeatTypeHour">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>
+
+            <li class="li-has-checkbox">
+                <label id="repeatTypeDay">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>
+
+            <li class="li-has-checkbox">
+                <label id="repeatTypeWeek">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>
+
+            <li class="li-has-checkbox">
+                <label id="repeatTypeMonth">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>
+
+            <!--<li class="li-has-checkbox">
+                <label id="repeatTypeLastDayOfMonth">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>-->
+
+            <li class="li-has-checkbox">
+                <label id="repeatTypeYear">
+                    <input name="repeatType" type="radio"/>
+                </label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="postponeTypePickPage" class="ui-page">
+    <header class="ui-header">
+        <h2 class="ui-title"></h2>
+    </header>
+    <div class="ui-content">
+        <ul class="ui-listview">
+            <li>
+                <label id="postponeTypeHour"></label>
+            </li>
+
+            <li>
+                <label id="postponeTypeDay"></label>
+            </li>
+
+            <li>
+                <label id="postponeTypeWeek"></label>
+            </li>
+
+            <li>
+                <label id="postponeTypeMonth"></label>
+            </li>
+
+            <li>
+                <label id="postponeTypeYear"></label>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="ui-page" id="alarmPage">
+    <header class="ui-header">
+        <h2 class="ui-title">Time's up</h2>
+    </header>
+
+    <div class="ui-content" data-enable-page-scroll="false">
+        <ul class="ui-listview">
+            <li id="alarmName" style="color: red">
+
+            </li>
+            <li id="alarmPostponeButton" onclick="postponeAlarm()">
+                Postpone
+            </li>
+        </ul>
+
+    </div>
+    <footer class="ui-footer ui-bottom-button ui-fixed">
+        <button id="alarmDismissButton" class="ui-btn" onclick="dismissAlarm()">Dismiss</button>
+    </footer>
+</div>
+
+<div class="ui-page" data-enable-page-scroll="false" id="number-picker-page">
+    <div class="ui-content">
+        <label>
+            <input id="number-picker" max="30" min="1" step="1" type="number" value="1"/>
+        </label>
+    </div>
+</div>
+
+
+<!--suppress HtmlFormInputWithoutLabel -->
+<input id="dateInput" style="visibility: hidden; width: 50px" type="date"/>
+<!--suppress HtmlFormInputWithoutLabel -->
+<input id="timeInput" style="visibility: hidden; width: 50px" type="time"/>
+
+
+</body>
+</html>

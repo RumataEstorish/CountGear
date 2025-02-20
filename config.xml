@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" xmlns:tizen="http://tizen.org/ns/widgets" id="https://sites.google.com/site/gearapplications/countgear" version="3.0.1" viewmodes="maximized">
+    <tizen:application id="Rzaw4mAjpX.CountGear" package="Rzaw4mAjpX" required_version="2.2"/>
+    <author href="https://sites.google.com/view/gearsoftware/applications/countgear" email="rumataestorish@yandex.ru">Rumata</author>
+    <content src="index.html"/>
+    <description>Count time to event or passed from event.</description>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+    <icon src="icon_launcher.png"/>
+    <name>CountGear</name>
+    <tizen:privilege name="http://tizen.org/privilege/power"/>
+    <tizen:privilege name="http://tizen.org/privilege/notification"/>
+    <tizen:privilege name="http://tizen.org/privilege/application.launch"/>
+    <tizen:privilege name="http://tizen.org/privilege/alarm"/>
+    <tizen:profile name="wearable"/>
+    <tizen:setting background-support="enable" encryption="disable" hwkey-event="enable"/>
+</widget>
